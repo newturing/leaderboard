@@ -1,0 +1,182 @@
+name: Process Submission
+
+on:
+  issues:
+    types: [opened, edited, closed]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  process-submission:
+    if: |
+      (contains(github.event.issue.labels.*.name, 'submission') || startsWith(github.event.issue.title, '[Submission]')) &&
+      (github.event.action == 'opened' || github.event.action == 'edited')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Process submission
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python .github/scripts/process_issue.py update "$ISSUE_NUMBER" "$ISSUE_TITLE" "$ISSUE_AUTHOR" "$ISSUE_URL" "$ISSUE_BODY"
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/leaderboard.json
+          git diff --staged --quiet || git commit -m "Update leaderboard with submission #${{ github.event.issue.number }}"
+          git push
+      
+      - name: Add updated label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['updated']
+            });
+      
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '✅ Your submission has been processed and added to the leaderboard! View it at: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/'
+            });
+
+  remove-submission:
+    if: |
+      (contains(github.event.issue.labels.*.name, 'submission') || startsWith(github.event.issue.title, '[Submission]')) &&
+      github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Remove submission
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python .github/scripts/process_issue.py remove "$ISSUE_NUMBER"
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/leaderboard.json
+          git diff --staged --quiet || git commit -m "Remove submission #${{ github.event.issue.number }} (issue closed)"
+          git push
+
+  verify-submission:
+    if: |
+      github.event_name == 'issue_comment' &&
+      (contains(github.event.issue.labels.*.name, 'submission') || startsWith(github.event.issue.title, '[Submission]')) &&
+      contains(github.event.comment.body, '/verify')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check if commenter is admin
+        uses: actions/github-script@v7
+        id: check-admin
+        with:
+          script: |
+            const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: context.payload.comment.user.login
+            });
+            const isAdmin = ['admin', 'write'].includes(permission.permission);
+            console.log(`User ${context.payload.comment.user.login} has ${permission.permission} permission`);
+            return isAdmin;
+          result-encoding: string
+      
+      - name: Checkout repository
+        if: steps.check-admin.outputs.result == 'true'
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        if: steps.check-admin.outputs.result == 'true'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Mark as verified
+        if: steps.check-admin.outputs.result == 'true'
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python .github/scripts/process_issue.py verify "$ISSUE_NUMBER"
+      
+      - name: Commit and push changes
+        if: steps.check-admin.outputs.result == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/leaderboard.json
+          git diff --staged --quiet || git commit -m "Mark submission #${{ github.event.issue.number }} as verified"
+          git push
+      
+      - name: Add verified label
+        if: steps.check-admin.outputs.result == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['verified']
+            });
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '✓ This submission has been verified by an admin!'
+            });
+      
+      - name: Deny if not admin
+        if: steps.check-admin.outputs.result != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '❌ Only repository admins can verify submissions.'
+            });

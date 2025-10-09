@@ -1,0 +1,69 @@
+name: Model Submission
+description: Submit your model results to the leaderboard
+title: "[Submission] "
+labels: ["submission"]
+body:
+  - type: input
+    id: student_name
+    attributes:
+      label: Student Name
+      description: Your name or GitHub username
+      placeholder: e.g., John Doe
+    validations:
+      required: false
+  
+  - type: dropdown
+    id: model_length
+    attributes:
+      label: Model Length
+      description: Select the model configuration length
+      options:
+        - "256"
+        - "512"
+    validations:
+      required: false
+  
+  - type: input
+    id: accuracy
+    attributes:
+      label: Accuracy
+      description: Model accuracy (as a percentage or decimal)
+      placeholder: e.g., 0.95 or 95%
+    validations:
+      required: false
+  
+  - type: input
+    id: tensorboard_link
+    attributes:
+      label: TensorBoard Link
+      description: Link to your hosted HuggingFace TensorBoard
+      placeholder: https://huggingface.co/...
+    validations:
+      required: false
+  
+  - type: textarea
+    id: improvement_description
+    attributes:
+      label: Improvement Description
+      description: One sentence to describe your improvement
+      placeholder: Describe your approach or improvement in one sentence
+    validations:
+      required: false
+  
+  - type: input
+    id: gpu_hours
+    attributes:
+      label: GPU Hours
+      description: GPU hours used (e.g., "1 hour H100", "2 hours A100")
+      placeholder: e.g., 1 hour H100
+    validations:
+      required: false
+  
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Submission Agreement
+      description: By submitting, you confirm that the results are your own work
+      options:
+        - label: I confirm that these results are from my own work
+          required: false
