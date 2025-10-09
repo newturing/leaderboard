@@ -9,7 +9,7 @@
       "improvement_description": "Default config, with vLLM logprobs correction",
       "gpu_hours": "1.5 hour H100",
       "issue_url": "https://github.com/newturing/leaderboard/issues/2",
-      "submitted_at": "2025-10-09T08:04:18.690843",
+      "submitted_at": "2025-10-09T08:22:11.662860",
       "verified": false
     },
     {
