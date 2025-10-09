@@ -27,17 +27,8 @@ body:
     id: accuracy
     attributes:
       label: Accuracy
-      description: Model accuracy (as a percentage or decimal)
-      placeholder: e.g., 0.95 or 95%
-    validations:
-      required: false
-  
-  - type: input
-    id: tensorboard_link
-    attributes:
-      label: TensorBoard Link
-      description: Link to your hosted HuggingFace TensorBoard
-      placeholder: https://huggingface.co/...
+      description: Model accuracy as a percentage
+      placeholder: e.g., 95.32%
     validations:
       required: false
   
@@ -47,6 +38,20 @@ body:
       label: Improvement Description
       description: One sentence to describe your improvement
       placeholder: Describe your approach or improvement in one sentence
+    validations:
+      required: false
+  
+  - type: textarea
+    id: detailed_writeup
+    attributes:
+      label: Detailed Write-up
+      description: Provide a detailed explanation of your approach, techniques used, and any interesting findings
+      placeholder: |
+        Describe your approach in detail, including:
+        - Key techniques or modifications used
+        - Challenges faced and how you solved them
+        - Any interesting observations or insights
+      render: markdown
     validations:
       required: false
   
