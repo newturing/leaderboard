@@ -1,6 +1,6 @@
-# Test leaderboard
+# Assignment 2 leaderboard
 
-Submit and track model performance via GitHub Issues. Results display automatically on GitHub Pages.
+Submit and track model performance via GitHub Issues. Results display automatically at: https://newturing.github.io/leaderboard/
 
 ## Quick Start
 
@@ -14,7 +14,7 @@ Submit and track model performance via GitHub Issues. Results display automatica
 1. **Enable GitHub Pages:** Settings → Pages → Source: `main` branch, `/docs` folder
 2. **Set Permissions:** Settings → Actions → General → Workflow permissions: "Read and write permissions"
 
-Leaderboard will be at: https://newturing.github.io/a2-leaderboard/
+Leaderboard will be at: https://newturing.github.io/leaderboard/
 
 ## How It Works
 
