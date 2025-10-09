@@ -1,3 +1,16 @@
 {
-  "submissions": []
+  "submissions": [
+    {
+      "issue_number": 1,
+      "student_name": "Thanh",
+      "model_length": "256",
+      "accuracy": "53.52%",
+      "tensorboard_link": "",
+      "improvement_description": "Default config, with vLLM logprobs correction",
+      "gpu_hours": "1 hour H100",
+      "issue_url": "https://github.com/newturing/leaderboard/issues/1",
+      "submitted_at": "2025-10-09T07:37:19.337461",
+      "verified": false
+    }
+  ]
 }
