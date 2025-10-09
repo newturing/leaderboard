@@ -18,8 +18,9 @@ body:
       label: Model Length
       description: Select the model configuration length
       options:
-        - "256"
         - "512"
+        - "256"
+      default: 0
     validations:
       required: false
   

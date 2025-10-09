@@ -328,6 +328,69 @@
             animation: fadeIn 0.5s ease-out;
         }
         
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            margin: var(--spacing-md) 0 var(--spacing-lg) 0;
+        }
+        
+        .table-tabs {
+            display: flex;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ececec 100%);
+            border-bottom: 2px solid var(--nti-primary);
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 1rem;
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .tab-button:hover {
+            background: rgba(115, 16, 19, 0.05);
+            color: var(--nti-primary);
+        }
+        
+        .tab-button.active {
+            background: white;
+            color: var(--nti-primary);
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--nti-primary);
+        }
+        
+        .table-section {
+            display: none;
+        }
+        
+        .table-section.active {
+            display: block;
+        }
+        
+        .table-section table {
+            margin: 0;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        
         @media (max-width: 768px) {
             body { padding: var(--spacing-sm); }
             .header-section { 
@@ -344,6 +407,7 @@
             h2 { font-size: 1.2rem; padding: 14px 18px; }
             .links { flex-direction: column; gap: var(--spacing-xs); padding: var(--spacing-md); }
             .link-item { width: 100%; justify-content: center; }
+            .tab-button { font-size: 0.85rem; padding: 12px 16px; }
         }
     </style>
 </head>
@@ -358,37 +422,46 @@
         </div>
     </div>
     
-    <h2>Length 256</h2>
-    <table id="table256">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Student</th>
-                <th>Accuracy</th>
-                <th>Description</th>
-                <th>GPU Hours</th>
-                <th>Link</th>
-            </tr>
-        </thead>
-        <tbody id="body256">
-        </tbody>
-    </table>
+    <div class="table-container">
+        <div class="table-tabs">
+            <button class="tab-button" onclick="switchTab(256)">Length 256</button>
+            <button class="tab-button active" onclick="switchTab(512)">Length 512</button>
+        </div>
+        
+        <div class="table-section" id="section256">
+            <table id="table256">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Student</th>
+                        <th>Accuracy</th>
+                        <th>Description</th>
+                        <th>GPU Hours</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody id="body256">
+                </tbody>
+            </table>
+        </div>
 
-    <h2>Length 512</h2>
-    <table id="table512">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Student</th>
-                <th>Accuracy</th>
-                <th>Description</th>
-                <th>GPU Hours</th>
-                <th>Link</th>
-            </tr>
-        </thead>
-        <tbody id="body512">
-        </tbody>
-    </table>
+        <div class="table-section active" id="section512">
+            <table id="table512">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Student</th>
+                        <th>Accuracy</th>
+                        <th>Description</th>
+                        <th>GPU Hours</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody id="body512">
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <div class="links">
         <a href="https://huggingface.co/Qwen/Qwen3-1.7B" target="_blank" rel="noopener noreferrer" class="link-item">
@@ -412,6 +485,18 @@
     </footer>
 
     <script>
+        function switchTab(length) {
+            // Update sections
+            document.getElementById('section256').classList.remove('active');
+            document.getElementById('section512').classList.remove('active');
+            document.getElementById('section' + length).classList.add('active');
+            
+            // Update tab buttons
+            const tabs = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
         fetch('leaderboard.json').then(r => r.json()).then(data => {
             const subs = data.submissions || [];
             [256, 512].forEach(len => {
