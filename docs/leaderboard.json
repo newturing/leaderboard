@@ -1,18 +1,6 @@
 {
   "submissions": [
     {
-      "issue_number": 3,
-      "student_name": "Swan Hwee",
-      "model_length": "256",
-      "accuracy": "95.90",
-      "tensorboard_link": "",
-      "improvement_description": "learning rate + reward function",
-      "gpu_hours": "30 minutes H100",
-      "issue_url": "https://github.com/newturing/leaderboard/issues/3",
-      "submitted_at": "2025-10-10T16:28:24.032572",
-      "verified": false
-    },
-    {
       "issue_number": 2,
       "student_name": "Thanh",
       "model_length": "512",
