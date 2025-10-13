@@ -21,7 +21,7 @@
       "improvement_description": "Reward Function, Advantage + Log ratio clamping",
       "gpu_hours": "1.5 H1000",
       "issue_url": "https://github.com/newturing/leaderboard/issues/4",
-      "submitted_at": "2025-10-13T01:51:33.742745",
+      "submitted_at": "2025-10-13T01:52:58.300480",
       "verified": false
     },
     {
