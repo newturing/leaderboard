@@ -35,6 +35,18 @@
       "issue_url": "https://github.com/newturing/leaderboard/issues/1",
       "submitted_at": "2025-10-09T07:37:19.337461",
       "verified": false
+    },
+    {
+      "issue_number": 6,
+      "student_name": "baseline",
+      "model_length": "512",
+      "accuracy": "14.8%",
+      "tensorboard_link": "",
+      "improvement_description": "No training",
+      "gpu_hours": "N/A",
+      "issue_url": "https://github.com/newturing/leaderboard/issues/6",
+      "submitted_at": "2025-10-13T01:43:45.835946",
+      "verified": false
     }
   ]
 }
