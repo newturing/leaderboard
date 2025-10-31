@@ -25,6 +25,18 @@
       "verified": false
     },
     {
+      "issue_number": 8,
+      "student_name": "Giang Nguyen",
+      "model_length": "256",
+      "accuracy": "55.76%",
+      "tensorboard_link": "",
+      "improvement_description": "Multi-round training, with checkpoint selection and optimizer reset; warm-up with Dr.GRPO.",
+      "gpu_hours": "N/A",
+      "issue_url": "https://github.com/newturing/leaderboard/issues/8",
+      "submitted_at": "2025-10-31T10:18:50.156135",
+      "verified": false
+    },
+    {
       "issue_number": 4,
       "student_name": "Huy Dang",
       "model_length": "256",
